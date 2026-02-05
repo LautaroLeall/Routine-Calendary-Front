@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom"
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion"
 import { FaHome, FaCalendarAlt, FaTasks, FaUser } from "react-icons/fa"
+import { useUIStore } from "../store/ui.store"
 
 const items = [
     { to: "/dashboard", label: "Dashboard", icon: <FaHome /> },
@@ -11,14 +12,17 @@ const items = [
 ]
 
 export default function Sidebar() {
+    const { isSidebarOpen } = useUIStore()
+
     return (
         <motion.aside
-            initial={{ x: -80, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="w-64 bg-gray-900 text-white flex flex-col p-4"
+            animate={{ width: isSidebarOpen ? 256 : 80 }}
+            transition={{ duration: 0.3 }}
+            className="bg-gray-900 text-white flex flex-col p-4 overflow-hidden"
         >
-            <h1 className="text-xl font-bold mb-6">Rutina</h1>
+            <h1 className="text-xl font-bold mb-6 whitespace-nowrap">
+                {isSidebarOpen ? "Rutina" : "R"}
+            </h1>
 
             <nav className="flex flex-col gap-2">
                 {items.map(({ to, label, icon }) => (
@@ -27,11 +31,11 @@ export default function Sidebar() {
                         to={to}
                         className={({ isActive }) =>
                             `flex items-center gap-3 px-4 py-2 rounded-md transition
-                            ${isActive ? "bg-gray-700" : "hover:bg-gray-800"}`
+               ${isActive ? "bg-gray-700" : "hover:bg-gray-800"}`
                         }
                     >
                         {icon}
-                        {label}
+                        {isSidebarOpen && <span>{label}</span>}
                     </NavLink>
                 ))}
             </nav>
